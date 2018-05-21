@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<Template originator   = "Ufo-Pu55y"
+          created      = "20/03/2011"
+          lastModified = "20/03/2011">
+  
+  <!-- Template Header -->
+  <TemplateConfiguration>
+    <Name>Notepad++ Plugin</Name>
+    <Category>VBNet</Category>
+    <Icon>VBNet.Project.ControlLibrary</Icon>
+    <Description>Classlibrary, ready to get loaded into N++</Description>
+    <SupportedTargetFrameworks>v2.0</SupportedTargetFrameworks>
+  </TemplateConfiguration>
+  
+  <!-- Actions -->
+  <Actions>
+    <Open filename = "Main.vb"/>
+  </Actions>
+  
+  <Project language = "VBNet">
+     <ProjectItems>
+      <Reference Include="Microsoft.VisualBasic" />
+      <Reference Include="System" />
+      <Reference Include="System.Drawing" />
+      <Reference Include="System.Windows.Forms" />
+    </ProjectItems>
+    
+    <PropertyGroup>
+      <OutputType>Library</OutputType>
+      <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+      <AppDesignerFolder>Properties</AppDesignerFolder>
+      <RootNamespace></RootNamespace>
+    </PropertyGroup>
+    
+    <Files>
+      <File name="DllExport\DllExportAttribute.vb" src="NppPlugin\DllExport\DllExportAttribute.vb"/>
+
+      <File name="Forms\frmMyDlg.vb" src="NppPlugin\Forms\frmMyDlg.vb"/>
+      <File name="Forms\frmMyDlg.Designer.vb" src="NppPlugin\Forms\frmMyDlg.Designer.vb"/>
+      <File name="Forms\frmMyDlg.resx" src="NppPlugin\Forms\frmMyDlg.resx"/>
+
+      <File name="Properties\AssemblyInfo.vb" src="NppPlugin\Properties\AssemblyInfo.vb"/>
+      <File name="Properties\Resources.Designer.vb" src="NppPlugin\Properties\Resources.Designer.vb"/>
+      <File name="Properties\Resources.resx" src="NppPlugin\Properties\Resources.resx" binary="true"/>
+      <File name="Properties\star.png" src="NppPlugin\Properties\star.png" binary="true"/>
+      <File name="Properties\star_bmp.bmp" src="NppPlugin\Properties\star_bmp.bmp" binary="true"/>
+
+      <File name="Main.vb" src="NppPlugin\Main.vb"/>
+      <File name="NppPluginNETBase.vb" src="NppPlugin\NppPluginNETBase.vb" binary="true"/>
+      <File name="NppPluginNETHelper.vb" src="NppPlugin\NppPluginNETHelper.vb" binary="true"/>
+      <File name="UnmanagedExports.vb" src="NppPlugin\UnmanagedExports.vb"/>
+    </Files>
+    
+    <Imports>
+      <Import Project="$(SharpDevelopBinPath)\DllExport\NppPlugin.DllExport.targets" />
+    </Imports>
+  </Project>
+</Template>

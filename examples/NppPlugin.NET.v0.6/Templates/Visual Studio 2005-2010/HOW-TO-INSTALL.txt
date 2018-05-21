@@ -1,0 +1,12 @@
+Copy all files (not changing the subfolder structure!) into following folder:
+
+"My Documents\Visual Studio {VERSION}\"
+
+The template is now visible for C# and VB.NET in the 'New project' dialog.
+
+IMPORTANT: In VB.NET projects you have to clear the root namespace in the settings!
+
+Tested with VS2005, VS2008 and VS2010.
+
+That's all.
+Enjoy.
