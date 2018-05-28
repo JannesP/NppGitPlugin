@@ -18,6 +18,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,13 +48,10 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="DllExport\NppPlugin.DllExport.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  </Target>-->
   <ItemGroup>
     <Compile Include="DllExport\DllExportAttribute.cs" />
     <Compile Include="GitPlugin.cs" />
@@ -79,8 +78,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DllExport\NppPlugin.DllExport.targets" />
+    <None Include="GitPlugin.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\git_iconx16.png" />
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>set BIN_DIR="$(SolutionDir)\bin\$(ConfigurationName)"
+set NPP_PLUGIN_DIR="C:\Programs\Notepad++\plugins"
+
+if not exist "%25BIN_DIR%25\$(TargetName)" mkdir  "%25BIN_DIR%25\$(TargetName)"
+robocopy "$(TargetDir)\" "%25BIN_DIR%25\$(TargetName)" /e /purge
+if exist "%25BIN_DIR%25\$(TargetName)\$(TargetFileName)" del "%25BIN_DIR%25\$(TargetName)\$(TargetFileName)"
+if exist "%25BIN_DIR%25\$(TargetName)\$(TargetFileName).config" del "%25BIN_DIR%25\$(TargetName)\$(TargetFileName).config"
+copy "$(TargetPath)" "%25BIN_DIR%25\$(TargetFileName)"
+copy "$(TargetPath).config" "%25BIN_DIR%25\$(TargetFileName).config"
+
+tasklist /FI "IMAGENAME eq notepad++.exe" 2&gt;NUL | find /I /N "notepad++.exe"&gt;NUL
+if "%25ERRORLEVEL%25"=="0" taskkill /f /im "notepad++.exe"
+
+if not exist "%25NPP_PLUGIN_DIR%25\$(TargetName)\" mkdir  "%25NPP_PLUGIN_DIR%25\$(TargetName)\"
+robocopy "%25BIN_DIR%25" "%25NPP_PLUGIN_DIR%25" /e
+
+set/A errlev="%25ERRORLEVEL%25 &amp; 24"
+exit/B %25errlev%25</PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="AfterBuild">
+    <Exec Command="$(PostBuildEvent)" />
+  </Target>
 </Project>
