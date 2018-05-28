@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -6,9 +7,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
 using NppGitPlugin.NppPluginLib;
 using NppGitPlugin.Properties;
+using NppGitPlugin.Utility;
+using NppGitPlugin.Views;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NppGitPlugin
 {
@@ -30,6 +35,7 @@ namespace NppGitPlugin
 
         private void UnmanagedEvents_BeNotified(object sender, UnmanagedEvents.NppNotifyEventArgs e)
         {
+            Trace.TraceInformation($"BeNotified: {((NppMsg)e.Notification.nmhdr.code).ToString()}");
             if (e.Notification.nmhdr.code == (uint)NppMsg.NPPN_TBMODIFICATION)
             {
                 _funcItems.RefreshItems();
@@ -45,6 +51,8 @@ namespace NppGitPlugin
         public const string PluginName = "GitPlugin";
         private string _iniFilePath = null;
         private readonly Bitmap _gitBitmap = Resources.git_iconx16;
+        private Icon _gitIcon;
+        private Form _gitWindow;
 
         private int _idCommandShowGitGui = -1;
         #endregion
@@ -105,7 +113,41 @@ namespace NppGitPlugin
 
         private void ShowGitGui()
         {
-            MessageBox.Show("ShowGitGui successful.");
+            if (_gitWindow == null)
+            {
+                _gitWindow = new DockableGitForm();
+                _gitWindow.Show();
+                _gitIcon = Icon.FromHandle(_gitBitmap.GetHicon());
+
+                NppTbData nppTbData = new NppTbData();
+                nppTbData.hClient = _gitWindow.Handle;
+                nppTbData.pszName = "Current Git Status";
+                nppTbData.dlgID = _idCommandShowGitGui;
+                nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
+                nppTbData.hIconTab = (uint) _gitIcon.Handle;
+                nppTbData.pszModuleName = PluginName;
+                IntPtr ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(nppTbData));
+                Marshal.StructureToPtr(nppTbData, ptrNppTbData, false);
+
+                Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_DMMREGASDCKDLG, 0, ptrNppTbData);
+                Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_SETMENUITEMCHECK,
+                    _funcItems.Items[_idCommandShowGitGui]._cmdID, 1);
+            }
+            else
+            {
+                if (_gitWindow.Visible)
+                {
+                    Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_DMMHIDE, 0, _gitWindow.Handle);
+                    Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_SETMENUITEMCHECK, _funcItems.Items[_idCommandShowGitGui]._cmdID, 0);
+                }
+                else
+                {
+                    Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_DMMSHOW, 0, _gitWindow.Handle);
+                    Win32.SendMessage(nppData._nppHandle, NppMsg.NPPM_SETMENUITEMCHECK, _funcItems.Items[_idCommandShowGitGui]._cmdID, 1);
+                }
+            }
+            
+            
         }
 
         #endregion
