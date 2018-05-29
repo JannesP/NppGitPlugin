@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using NppGitPlugin.Utility;
 using NppPlugin.DllExport;
 
 namespace NppGitPlugin.NppPluginLib
@@ -15,7 +19,21 @@ namespace NppGitPlugin.NppPluginLib
             }
         }
 
-        private static readonly NppPluginBase Plugin = GitPlugin.Instance;
+        private static readonly GitPlugin Plugin = GitPlugin.Instance;
+
+        static UnmanagedEvents()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string folderPath = Path.Combine(Util.AssemblyDirectory, "GitPlugin");
+            string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+            if (!File.Exists(assemblyPath)) return null;
+            Assembly asm = Assembly.LoadFrom(assemblyPath);
+            return asm;
+        }
 
         public static event EventHandler SetInfo;
         private static void OnSetInfo()
@@ -37,7 +55,7 @@ namespace NppGitPlugin.NppPluginLib
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void setInfo(NppData notepadPlusData)
         {
-            Plugin.nppData = notepadPlusData;
+            GitPlugin.Instance.nppData = notepadPlusData;
             OnSetInfo();
         }
 
@@ -51,6 +69,8 @@ namespace NppGitPlugin.NppPluginLib
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static uint messageProc(uint Message, IntPtr wParam, IntPtr lParam)
         {
+            WindowsMessage wm = (WindowsMessage) Message;
+            Trace.TraceInformation($"WM {wm}: wParam: {string.Format("{0:X8}", wParam.ToInt32())}, lParam: {string.Format("{0:X8}", lParam.ToInt32())}");
             return 1;
         }
 

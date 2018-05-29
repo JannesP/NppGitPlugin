@@ -28,22 +28,31 @@ namespace NppGitPlugin
             UnmanagedEvents.SetInfo += UnmanagedEvents_SetInfo;
         }
 
-        private void UnmanagedEvents_SetInfo(object sender, EventArgs e)
+        public void UnmanagedEvents_SetInfo(object sender, EventArgs e)
         {
+            NppHelper.NppHandle = nppData._nppHandle;
             CommandMenuInit();
         }
 
         private void UnmanagedEvents_BeNotified(object sender, UnmanagedEvents.NppNotifyEventArgs e)
         {
-            Trace.TraceInformation($"BeNotified: {((NppMsg)e.Notification.nmhdr.code).ToString()}");
-            if (e.Notification.nmhdr.code == (uint)NppMsg.NPPN_TBMODIFICATION)
+            NppMsg msgCode = (NppMsg) e.Notification.nmhdr.code;
+            switch (msgCode)
             {
-                _funcItems.RefreshItems();
-                SetToolBarIcon();
-            }
-            else if (e.Notification.nmhdr.code == (uint)NppMsg.NPPN_SHUTDOWN)
-            {
-                PluginCleanUp();
+                case NppMsg.NPPN_TBMODIFICATION:
+                    _funcItems.RefreshItems();
+                    SetToolBarIcon();
+                    break;
+                case NppMsg.NPPN_SHUTDOWN:
+                    PluginCleanUp();
+                    break;
+                case NppMsg.NPPN_BUFFERACTIVATED:
+                    //this seems to fit mostly for file opened
+                    if (_gitWindow != null && _gitWindow.Visible) _gitWindow.FileChanged();
+                    break;
+                default:
+                        Trace.TraceInformation($"BeNotified unhandled: {msgCode.ToString()}");
+                    break;
             }
         }
 
@@ -52,7 +61,7 @@ namespace NppGitPlugin
         private string _iniFilePath = null;
         private readonly Bitmap _gitBitmap = Resources.git_iconx16;
         private Icon _gitIcon;
-        private Form _gitWindow;
+        private DockableGitForm _gitWindow;
 
         private int _idCommandShowGitGui = -1;
         #endregion
@@ -83,10 +92,10 @@ namespace NppGitPlugin
             //            ShortcutKey *shortcut,                // optional. Define a shortcut to trigger this command
             //            bool check0nInit                      // optional. Make this menu item be checked visually
             //            );
-            SetCommand(0, "Hello Notepad++", Hello);
+            SetCommand(0, "Show Git GUI", ShowGitGui);
+            _idCommandShowGitGui = 0;
 
-            SetCommand(1, "Show Git GUI", ShowGitGui);
-            _idCommandShowGitGui = 1;
+            SetCommand(1, "About", ShowAbout);
 
         }
         private void SetToolBarIcon()
@@ -106,9 +115,9 @@ namespace NppGitPlugin
 
         #region " Menu functions "
 
-        private void Hello()
+        private void ShowAbout()
         {
-            MessageBox.Show("Test successful.");
+            MessageBox.Show("GitPlugin created for a university project.\nSources can be found here: https://github.com/JannesP/NppGitPlugin", "About GitPlugin", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
         private void ShowGitGui()
