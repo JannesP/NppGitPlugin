@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\LibGit2Sharp.NativeBinaries.1.0.210\build\net461\LibGit2Sharp.NativeBinaries.props" Condition="Exists('..\packages\LibGit2Sharp.NativeBinaries.1.0.210\build\net461\LibGit2Sharp.NativeBinaries.props')" />
+  <Import Project="..\packages\LibGit2Sharp.NativeBinaries.1.0.217\build\net461\LibGit2Sharp.NativeBinaries.props" Condition="Exists('..\packages\LibGit2Sharp.NativeBinaries.1.0.217\build\net461\LibGit2Sharp.NativeBinaries.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -84,12 +84,34 @@
       <HintPath>..\packages\ConsoleControl.1.1.0.0\lib\net40\ConsoleControlAPI.dll</HintPath>
     </Reference>
     <Reference Include="LibGit2Sharp, Version=0.25.0.0, Culture=neutral, PublicKeyToken=7cbde695407f0333, processorArchitecture=MSIL">
-      <HintPath>..\packages\LibGit2Sharp.0.25.0\lib\netstandard2.0\LibGit2Sharp.dll</HintPath>
+      <HintPath>..\packages\LibGit2Sharp.0.25.2\lib\netstandard2.0\LibGit2Sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.1.16.30\lib\net35\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.9.0\lib\netstandard2.0\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +124,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="DllExport\NppPlugin.DllExport.targets" />
     <None Include="GitPlugin.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -141,6 +164,6 @@ exit/B %25errlev%25</PostBuildEvent>
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\LibGit2Sharp.NativeBinaries.1.0.210\build\net461\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LibGit2Sharp.NativeBinaries.1.0.210\build\net461\LibGit2Sharp.NativeBinaries.props'))" />
+    <Error Condition="!Exists('..\packages\LibGit2Sharp.NativeBinaries.1.0.217\build\net461\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LibGit2Sharp.NativeBinaries.1.0.217\build\net461\LibGit2Sharp.NativeBinaries.props'))" />
   </Target>
 </Project>
